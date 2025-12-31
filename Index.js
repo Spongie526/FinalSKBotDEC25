@@ -50,29 +50,28 @@ let lastAccessReset = 0;
 app.get('/', (req, res) => res.send("✅ Proxy server is online."));
 app.get('/health', (req, res) => res.status(200).json({ status: "online", time: new Date().toISOString() }));
 
-async function loginRoblox() {
-  const cookie = process.env.ROBLOSECURITY;
-  console.log("👀 Loaded cookie:", !!cookie);
+const fs = require("fs");
+const path = require("path");
 
-  if (!cookie) {
-    console.error("❌ Missing ROBLOSECURITY");
-    return;
-  }
-
+(async () => {
   try {
-    await noblox.setCookie(cookie, { warn: false });
+    const cookiePath = path.join(__dirname, "roblox.cookie");
 
-    // 🔴 FORCE an authenticated request
-    const me = await noblox.getCurrentUser();
+    if (!fs.existsSync(cookiePath)) {
+      console.error("❌ roblox.cookie file not found");
+      return;
+    }
 
-    console.log(`✅ Roblox logged in as: ${me.UserName}`);
+    const cookie = fs.readFileSync(cookiePath, "utf8").trim();
+    console.log("👀 Loaded cookie from file:", cookie.startsWith("_|WARNING"));
+
+    const user = await noblox.setCookie(cookie);
+    console.log(`✅ Logged in to Roblox as: ${user.UserName || user.name}`);
   } catch (err) {
     console.error("❌ Roblox login failed:", err.message);
   }
-}
+})();
 
-// 🔑 CALL THIS BEFORE ANY Roblox API USAGE
-loginRoblox();
 
 
 // 🔁 ACCESS RESET ENDPOINT (used by Discord + Roblox polling)
