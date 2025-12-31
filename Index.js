@@ -379,19 +379,30 @@ Have a nice day! 😸`;
   }
 });
 
-// 🔐 Roblox login
-(async () => {
-  try {
-    const cookie = process.env.ROBLOSECURITY;
-    console.log("👀 Loaded cookie:", !!cookie);
-    if (!cookie) return console.error("❌ Missing ROBLOSECURITY");
+async function loginRoblox() {
+  const cookie = process.env.ROBLOSECURITY;
+  console.log("👀 Loaded cookie:", !!cookie);
 
-    const user = await noblox.setCookie(cookie);
-    console.log(`✅ Logged in to Roblox as: ${user.UserName || user.name}`);
-  } catch (err) {
-    console.error("❌ Login error:", err.message);
+  if (!cookie) {
+    console.error("❌ Missing ROBLOSECURITY");
+    return;
   }
-})();
+
+  try {
+    await noblox.setCookie(cookie, { warn: false });
+
+    // 🔴 FORCE an authenticated request
+    const me = await noblox.getCurrentUser();
+
+    console.log(`✅ Roblox logged in as: ${me.UserName}`);
+  } catch (err) {
+    console.error("❌ Roblox login failed:", err.message);
+  }
+}
+
+// 🔑 CALL THIS BEFORE ANY Roblox API USAGE
+loginRoblox();
+
 
 // 🆕 Jail Log Receiver
 app.post('/jail-log', async (req, res) => {
