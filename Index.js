@@ -50,6 +50,31 @@ let lastAccessReset = 0;
 app.get('/', (req, res) => res.send("✅ Proxy server is online."));
 app.get('/health', (req, res) => res.status(200).json({ status: "online", time: new Date().toISOString() }));
 
+async function loginRoblox() {
+  const cookie = process.env.ROBLOSECURITY;
+  console.log("👀 Loaded cookie:", !!cookie);
+
+  if (!cookie) {
+    console.error("❌ Missing ROBLOSECURITY");
+    return;
+  }
+
+  try {
+    await noblox.setCookie(cookie, { warn: false });
+
+    // 🔴 FORCE an authenticated request
+    const me = await noblox.getCurrentUser();
+
+    console.log(`✅ Roblox logged in as: ${me.UserName}`);
+  } catch (err) {
+    console.error("❌ Roblox login failed:", err.message);
+  }
+}
+
+// 🔑 CALL THIS BEFORE ANY Roblox API USAGE
+loginRoblox();
+
+
 // 🔁 ACCESS RESET ENDPOINT (used by Discord + Roblox polling)
 app.post("/access-reset", async (req, res) => {
   const apiKey = req.headers["x-api-key"];
@@ -379,31 +404,6 @@ Have a nice day! 😸`;
   }
 });
 
-async function loginRoblox() {
-  const cookie = process.env.ROBLOSECURITY;
-  console.log("👀 Loaded cookie:", !!cookie);
-
-  if (!cookie) {
-    console.error("❌ Missing ROBLOSECURITY");
-    return;
-  }
-
-  try {
-    await noblox.setCookie(cookie, { warn: false });
-
-    // 🔴 FORCE an authenticated request
-    const me = await noblox.getCurrentUser();
-
-    console.log(`✅ Roblox logged in as: ${me.UserName}`);
-  } catch (err) {
-    console.error("❌ Roblox login failed:", err.message);
-  }
-}
-
-// 🔑 CALL THIS BEFORE ANY Roblox API USAGE
-loginRoblox();
-
-
 // 🆕 Jail Log Receiver
 app.post('/jail-log', async (req, res) => {
   try {
@@ -657,7 +657,6 @@ app.post("/roblox-call-log", async (req, res) => {
 
 
 // 🟢 Health Check
-app.get('/', (req, res) => res.send("✅ Kingdom rank server running."));
 app.listen(process.env.PORT || 3000, () => console.log("🌐 Server is live"));
 
 client.login(TOKEN);
