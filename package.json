@@ -1,0 +1,18 @@
+{
+  "name": "sponges-kingdom-bot",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "start": "node Index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "axios": "^1.6.8",
+    "discord.js": "^14.16.3",
+    "noblox.js": "^4.13.0",
+    "dotenv": "^16.4.5"
+  }
+}
