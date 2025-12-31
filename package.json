@@ -1,19 +1,21 @@
 {
   "name": "sponges-kingdom-bot",
   "version": "1.0.0",
-  "description": "Sponges Kingdom Discord + Roblox bot",
+  "description": "Discord + Roblox bot and HTTP API for Sponges Kingdom",
   "main": "Index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node Index.js"
   },
   "engines": {
-    "node": "18.x"
+    "node": ">=20"
   },
   "dependencies": {
-    "axios": "^1.6.8",
-    "discord.js": "^14.15.3",
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "express": "^4.21.2",
     "noblox.js": "^6.2.0"
   }
 }
