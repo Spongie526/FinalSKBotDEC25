@@ -246,7 +246,7 @@ client.on('interactionCreate', async interaction => {
 
     try {
       await axios.post(
-        "https://d055bbef-762c-41d6-b467-37ecde70ba39-00-1j0hykichcudj.janeway.replit.dev/access-reset",
+        "https://entire-perch-stormydacat-135cae8e.koyeb.app/access-reset",
         {},
         {
           headers: {
