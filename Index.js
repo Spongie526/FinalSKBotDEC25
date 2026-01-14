@@ -130,6 +130,12 @@ app.get('/group-members', async (req, res) => {
 app.post('/receive-data', (req, res) => {
   const data = req.body;
   if (!Array.isArray(data)) return res.status(400).send("Expected array");
+
+  // 🔥 Clear old snapshot
+  for (const key in userData) {
+    delete userData[key];
+  }
+
   data.forEach(p => {
     userData[p.UserId] = {
       username: p.Username,
@@ -137,7 +143,8 @@ app.post('/receive-data', (req, res) => {
       minutes: p.Minutes
     };
   });
-  console.log("✅ Access data updated.");
+
+  console.log("✅ Access data refreshed.");
   res.sendStatus(200);
 });
 
